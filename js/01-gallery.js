@@ -6,18 +6,38 @@ const markupGallery = makeGalleryMarkup(galleryItems);
 galleryContainer.insertAdjacentHTML('beforeend', markupGallery);
 galleryContainer.addEventListener('click', onGallerySelectedImg);
 
-const instance = basicLightbox.create(``);
-
 function onGallerySelectedImg(evt) {
   evt.preventDefault();
-  console.log(evt.target.dataset.source);
 
-  const instance = basicLightbox
-    .create(
-      `<img src="${evt.target.dataset.source}" width="800" height="600" /> `,
-      { closable: true }
-    )
-    .show();
+  if (evt.target.nodeName !== 'IMG') {
+    return;
+  }
+
+  const onEscape = (evt) => {
+    if (evt.key === 'Escape') {
+      instance.close();
+    }
+  };
+
+  const instance = basicLightbox.create(
+    `<img src="${evt.target.dataset.source}"/> `,
+    {
+      onShow: (instance) => {
+        window.addEventListener('keydown', onEscape);
+      },
+      onClose: (instance) => {
+        window.removeEventListener('keydown', onEscape);
+      },
+    }
+  );
+
+  instance.show();
+}
+
+function isImage(evt) {
+  if (evt.target.nodeName !== 'IMG') {
+    return;
+  }
 }
 
 function makeGalleryMarkup(galleryItems) {
