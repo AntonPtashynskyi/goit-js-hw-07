@@ -34,12 +34,6 @@ function onGallerySelectedImg(evt) {
   instance.show();
 }
 
-function isImage(evt) {
-  if (evt.target.nodeName !== 'IMG') {
-    return;
-  }
-}
-
 function makeGalleryMarkup(galleryItems) {
   return galleryItems
     .map(({ preview, original, description }) => {
